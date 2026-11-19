@@ -520,7 +520,9 @@ export const OpportunitiesPage = () => {
 };
 
 // Opportunity Form Component
-const OpportunityForm = ({ defaultValues, customers, assignees, canAssign, onSubmit, onCancel, loading }) => {
+const OpportunityForm = ({ defaultValues, customers = [], assignees = [], canAssign, onSubmit, onCancel, loading }) => {
+  const safeCustomers = Array.isArray(customers) ? customers : [];
+  const safeAssignees = Array.isArray(assignees) ? assignees : [];
   const defaultCloseDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
   const {
@@ -568,9 +570,9 @@ const OpportunityForm = ({ defaultValues, customers, assignees, canAssign, onSub
       <Select
         label="Customer Account"
         required
-        options={customers.map((c) => ({
+        options={safeCustomers.map((c) => ({
           value: c._id,
-          label: `${c.name} (${c.customerCode})`,
+          label: `${c.name} (${c.customerCode || 'CUST'})`,
         }))}
         error={errors.customer?.message}
         {...register('customer')}
@@ -625,7 +627,7 @@ const OpportunityForm = ({ defaultValues, customers, assignees, canAssign, onSub
       {canAssign && (
         <Select
           label="Assigned Sales Representative"
-          options={assignees.map((a) => ({
+          options={safeAssignees.map((a) => ({
             value: a._id,
             label: `${a.name} (${a.role})`,
           }))}

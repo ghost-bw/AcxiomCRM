@@ -27,6 +27,7 @@ import {
   Mail,
   Shield,
   Briefcase,
+  CheckCircle2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -88,8 +89,13 @@ export const UsersPage = () => {
     },
   });
 
-  const users = data?.data || [];
+  const users = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
   const meta = data?.meta || { total: 0, totalPages: 1 };
+  const managersList = Array.isArray(managersData)
+    ? managersData
+    : Array.isArray(managersData?.data)
+    ? managersData.data
+    : [];
 
   // Mutations
   const createMutation = useMutation({
@@ -314,7 +320,7 @@ export const UsersPage = () => {
         maxWidth="max-w-lg"
       >
         <UserCreateForm
-          managers={managersData || []}
+          managers={managersList}
           onSubmit={(values) => createMutation.mutate(values)}
           onCancel={() => setIsCreateOpen(false)}
           loading={createMutation.isPending}
@@ -332,8 +338,8 @@ export const UsersPage = () => {
         {editingUser && (
           <UserEditForm
             defaultValues={editingUser}
-            managers={managersData || []}
-            isSelf={editingUser._id === currentUser.userId}
+            managers={managersList}
+            isSelf={editingUser._id === (currentUser?.userId || currentUser?._id || currentUser?.id)}
             onSubmit={(values) => updateMutation.mutate({ id: editingUser._id, updates: values })}
             onCancel={() => setEditingUser(null)}
             loading={updateMutation.isPending}
@@ -356,7 +362,9 @@ export const UsersPage = () => {
   );
 };
 
-const UserCreateForm = ({ managers, onSubmit, onCancel, loading }) => {
+const UserCreateForm = ({ managers = [], onSubmit, onCancel, loading }) => {
+  const safeManagers = Array.isArray(managers) ? managers : [];
+
   const {
     register,
     handleSubmit,
@@ -389,7 +397,7 @@ const UserCreateForm = ({ managers, onSubmit, onCancel, loading }) => {
         {selectedRole === 'Sales Executive' && (
           <Select
             label="Reporting Manager (Optional)"
-            options={managers.map((m) => ({ value: m._id, label: m.name }))}
+            options={safeManagers.map((m) => ({ value: m._id, label: m.name }))}
             error={errors.managerId?.message}
             {...register('managerId')}
           />
@@ -408,7 +416,9 @@ const UserCreateForm = ({ managers, onSubmit, onCancel, loading }) => {
   );
 };
 
-const UserEditForm = ({ defaultValues, managers, isSelf, onSubmit, onCancel, loading }) => {
+const UserEditForm = ({ defaultValues, managers = [], isSelf, onSubmit, onCancel, loading }) => {
+  const safeManagers = Array.isArray(managers) ? managers : [];
+
   const {
     register,
     handleSubmit,
@@ -444,7 +454,7 @@ const UserEditForm = ({ defaultValues, managers, isSelf, onSubmit, onCancel, loa
         {selectedRole === 'Sales Executive' && (
           <Select
             label="Reporting Manager"
-            options={managers.map((m) => ({ value: m._id, label: m.name }))}
+            options={safeManagers.map((m) => ({ value: m._id, label: m.name }))}
             error={errors.managerId?.message}
             {...register('managerId')}
           />

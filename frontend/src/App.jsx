@@ -24,6 +24,7 @@ import { SettingsPage } from './pages/settings/SettingsPage.jsx';
 // Error Pages
 import { UnauthorizedPage } from './pages/UnauthorizedPage.jsx';
 import { NotFoundPage } from './pages/NotFoundPage.jsx';
+import { ErrorBoundary } from './components/common/ErrorBoundary.jsx';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -40,7 +41,16 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const RoleRoute = ({ allowedRoles, children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white text-xs">
+        Verifying permissions...
+      </div>
+    );
+  }
+
   if (!user || !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
@@ -49,7 +59,8 @@ const RoleRoute = ({ allowedRoles, children }) => {
 
 export const App = () => {
   return (
-    <Routes>
+    <ErrorBoundary>
+      <Routes>
       {/* Public Auth Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
@@ -100,6 +111,7 @@ export const App = () => {
       {/* 404 Route */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
+  </ErrorBoundary>
   );
 };
 

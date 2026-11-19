@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar.jsx';
 import { Header } from './Header.jsx';
+import { ErrorBoundary } from '../common/ErrorBoundary.jsx';
 
 export const AppLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -21,7 +22,9 @@ export const AppLayout = () => {
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">
-            <Outlet />
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
           </div>
         </main>
       </div>

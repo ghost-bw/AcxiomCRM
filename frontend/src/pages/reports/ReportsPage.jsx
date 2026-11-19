@@ -247,150 +247,165 @@ const ConversionReportView = ({ data }) => {
 };
 
 // 3. Customer Report View
-const CustomerReportView = ({ data = [] }) => (
-  <table className="w-full text-left border-collapse text-xs">
-    <thead>
-      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
-        <th className="py-2.5 px-3">Code</th>
-        <th className="py-2.5 px-3">Customer Name</th>
-        <th className="py-2.5 px-3">Email</th>
-        <th className="py-2.5 px-3">Phone</th>
-        <th className="py-2.5 px-3">Owner</th>
-        <th className="py-2.5 px-3">Status</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-100">
-      {data.map((c) => (
-        <tr key={c._id}>
-          <td className="py-2.5 px-3 font-mono text-indigo-600">{c.customerCode}</td>
-          <td className="py-2.5 px-3 font-bold text-slate-900">{c.name}</td>
-          <td className="py-2.5 px-3 text-slate-600">{c.email}</td>
-          <td className="py-2.5 px-3 text-slate-600">{c.phone}</td>
-          <td className="py-2.5 px-3">{c.assignedTo?.name}</td>
-          <td className="py-2.5 px-3"><StatusBadge status={c.status} /></td>
+const CustomerReportView = ({ data }) => {
+  const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  return (
+    <table className="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
+          <th className="py-2.5 px-3">Code</th>
+          <th className="py-2.5 px-3">Customer Name</th>
+          <th className="py-2.5 px-3">Email</th>
+          <th className="py-2.5 px-3">Phone</th>
+          <th className="py-2.5 px-3">Owner</th>
+          <th className="py-2.5 px-3">Status</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {list.map((c) => (
+          <tr key={c._id}>
+            <td className="py-2.5 px-3 font-mono text-indigo-600">{c.customerCode}</td>
+            <td className="py-2.5 px-3 font-bold text-slate-900">{c.name}</td>
+            <td className="py-2.5 px-3 text-slate-600">{c.email}</td>
+            <td className="py-2.5 px-3 text-slate-600">{c.phone}</td>
+            <td className="py-2.5 px-3">{c.assignedTo?.name}</td>
+            <td className="py-2.5 px-3"><StatusBadge status={c.status} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // 4. Lead Report View
-const LeadReportView = ({ data = [] }) => (
-  <table className="w-full text-left border-collapse text-xs">
-    <thead>
-      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
-        <th className="py-2.5 px-3">Code</th>
-        <th className="py-2.5 px-3">Lead Name</th>
-        <th className="py-2.5 px-3">Source</th>
-        <th className="py-2.5 px-3">Priority</th>
-        <th className="py-2.5 px-3">Expected Deal</th>
-        <th className="py-2.5 px-3">Owner</th>
-        <th className="py-2.5 px-3">Status</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-100">
-      {data.map((l) => (
-        <tr key={l._id}>
-          <td className="py-2.5 px-3 font-mono text-indigo-600">{l.leadCode}</td>
-          <td className="py-2.5 px-3 font-bold text-slate-900">{l.name}</td>
-          <td className="py-2.5 px-3 text-slate-600">{l.source}</td>
-          <td className="py-2.5 px-3"><StatusBadge status={l.priority} /></td>
-          <td className="py-2.5 px-3 font-semibold">${(l.expectedValue || 0).toLocaleString()}</td>
-          <td className="py-2.5 px-3">{l.assignedTo?.name}</td>
-          <td className="py-2.5 px-3"><StatusBadge status={l.status} /></td>
+const LeadReportView = ({ data }) => {
+  const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  return (
+    <table className="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
+          <th className="py-2.5 px-3">Code</th>
+          <th className="py-2.5 px-3">Lead Name</th>
+          <th className="py-2.5 px-3">Source</th>
+          <th className="py-2.5 px-3">Priority</th>
+          <th className="py-2.5 px-3">Expected Deal</th>
+          <th className="py-2.5 px-3">Owner</th>
+          <th className="py-2.5 px-3">Status</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {list.map((l) => (
+          <tr key={l._id}>
+            <td className="py-2.5 px-3 font-mono text-indigo-600">{l.leadCode}</td>
+            <td className="py-2.5 px-3 font-bold text-slate-900">{l.name}</td>
+            <td className="py-2.5 px-3 text-slate-600">{l.source}</td>
+            <td className="py-2.5 px-3"><StatusBadge status={l.priority} /></td>
+            <td className="py-2.5 px-3 font-semibold">${(l.expectedValue || 0).toLocaleString()}</td>
+            <td className="py-2.5 px-3">{l.assignedTo?.name}</td>
+            <td className="py-2.5 px-3"><StatusBadge status={l.status} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // 5. Follow-Up Report View
-const FollowUpReportView = ({ data = [] }) => (
-  <table className="w-full text-left border-collapse text-xs">
-    <thead>
-      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
-        <th className="py-2.5 px-3">Subject</th>
-        <th className="py-2.5 px-3">Channel</th>
-        <th className="py-2.5 px-3">Related Type</th>
-        <th className="py-2.5 px-3">Date</th>
-        <th className="py-2.5 px-3">Owner</th>
-        <th className="py-2.5 px-3">Status</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-100">
-      {data.map((f) => (
-        <tr key={f._id}>
-          <td className="py-2.5 px-3 font-bold text-slate-900">{f.subject}</td>
-          <td className="py-2.5 px-3 text-slate-600">{f.followUpType}</td>
-          <td className="py-2.5 px-3 text-slate-600">{f.relatedType}</td>
-          <td className="py-2.5 px-3 font-semibold">{new Date(f.followUpDate).toLocaleDateString()}</td>
-          <td className="py-2.5 px-3">{f.assignedTo?.name}</td>
-          <td className="py-2.5 px-3"><StatusBadge status={f.status} /></td>
+const FollowUpReportView = ({ data }) => {
+  const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  return (
+    <table className="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
+          <th className="py-2.5 px-3">Subject</th>
+          <th className="py-2.5 px-3">Channel</th>
+          <th className="py-2.5 px-3">Related Type</th>
+          <th className="py-2.5 px-3">Date</th>
+          <th className="py-2.5 px-3">Owner</th>
+          <th className="py-2.5 px-3">Status</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {list.map((f) => (
+          <tr key={f._id}>
+            <td className="py-2.5 px-3 font-bold text-slate-900">{f.subject}</td>
+            <td className="py-2.5 px-3 text-slate-600">{f.followUpType}</td>
+            <td className="py-2.5 px-3 text-slate-600">{f.relatedType}</td>
+            <td className="py-2.5 px-3 font-semibold">{f.followUpDate ? new Date(f.followUpDate).toLocaleDateString() : 'N/A'}</td>
+            <td className="py-2.5 px-3">{f.assignedTo?.name}</td>
+            <td className="py-2.5 px-3"><StatusBadge status={f.status} /></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // 6. Opportunity Report View
-const OpportunityReportView = ({ data = [] }) => (
-  <table className="w-full text-left border-collapse text-xs">
-    <thead>
-      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
-        <th className="py-2.5 px-3">Code</th>
-        <th className="py-2.5 px-3">Deal Name</th>
-        <th className="py-2.5 px-3">Customer</th>
-        <th className="py-2.5 px-3">Amount</th>
-        <th className="py-2.5 px-3">Stage</th>
-        <th className="py-2.5 px-3">Close Date</th>
-        <th className="py-2.5 px-3">Owner</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-100">
-      {data.map((o) => (
-        <tr key={o._id}>
-          <td className="py-2.5 px-3 font-mono text-indigo-600">{o.opportunityCode}</td>
-          <td className="py-2.5 px-3 font-bold text-slate-900">{o.name}</td>
-          <td className="py-2.5 px-3 text-slate-600">{o.customer?.name}</td>
-          <td className="py-2.5 px-3 font-bold text-slate-900">${o.amount?.toLocaleString()}</td>
-          <td className="py-2.5 px-3"><StatusBadge status={o.stage} /></td>
-          <td className="py-2.5 px-3">{new Date(o.expectedCloseDate).toLocaleDateString()}</td>
-          <td className="py-2.5 px-3">{o.assignedTo?.name}</td>
+const OpportunityReportView = ({ data }) => {
+  const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  return (
+    <table className="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
+          <th className="py-2.5 px-3">Code</th>
+          <th className="py-2.5 px-3">Deal Name</th>
+          <th className="py-2.5 px-3">Customer</th>
+          <th className="py-2.5 px-3">Amount</th>
+          <th className="py-2.5 px-3">Stage</th>
+          <th className="py-2.5 px-3">Close Date</th>
+          <th className="py-2.5 px-3">Owner</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {list.map((o) => (
+          <tr key={o._id}>
+            <td className="py-2.5 px-3 font-mono text-indigo-600">{o.opportunityCode}</td>
+            <td className="py-2.5 px-3 font-bold text-slate-900">{o.name}</td>
+            <td className="py-2.5 px-3 text-slate-600">{o.customer?.name}</td>
+            <td className="py-2.5 px-3 font-bold text-slate-900">${o.amount?.toLocaleString()}</td>
+            <td className="py-2.5 px-3"><StatusBadge status={o.stage} /></td>
+            <td className="py-2.5 px-3">{o.expectedCloseDate ? new Date(o.expectedCloseDate).toLocaleDateString() : 'N/A'}</td>
+            <td className="py-2.5 px-3">{o.assignedTo?.name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // 7. User Activity Report View
-const UserActivityReportView = ({ data = [] }) => (
-  <table className="w-full text-left border-collapse text-xs">
-    <thead>
-      <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
-        <th className="py-2.5 px-3">Staff Name</th>
-        <th className="py-2.5 px-3">Role</th>
-        <th className="py-2.5 px-3">Total Actions</th>
-        <th className="py-2.5 px-3">Calls Held</th>
-        <th className="py-2.5 px-3">Meetings</th>
-        <th className="py-2.5 px-3">Emails</th>
-        <th className="py-2.5 px-3">Tasks</th>
-      </tr>
-    </thead>
-    <tbody className="divide-y divide-slate-100">
-      {data.map((u) => (
-        <tr key={u.userId}>
-          <td className="py-2.5 px-3 font-bold text-slate-900">{u.name} ({u.email})</td>
-          <td className="py-2.5 px-3 text-indigo-600 font-semibold">{u.role}</td>
-          <td className="py-2.5 px-3 font-extrabold text-slate-900">{u.totalActivities}</td>
-          <td className="py-2.5 px-3">{u.calls}</td>
-          <td className="py-2.5 px-3">{u.meetings}</td>
-          <td className="py-2.5 px-3">{u.emails}</td>
-          <td className="py-2.5 px-3">{u.tasks}</td>
+const UserActivityReportView = ({ data }) => {
+  const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  return (
+    <table className="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr className="border-b border-slate-200 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase">
+          <th className="py-2.5 px-3">Staff Name</th>
+          <th className="py-2.5 px-3">Role</th>
+          <th className="py-2.5 px-3">Total Actions</th>
+          <th className="py-2.5 px-3">Calls Held</th>
+          <th className="py-2.5 px-3">Meetings</th>
+          <th className="py-2.5 px-3">Emails</th>
+          <th className="py-2.5 px-3">Tasks</th>
         </tr>
-      ))}
-    </tbody>
-  </table>
-);
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {list.map((u) => (
+          <tr key={u.userId}>
+            <td className="py-2.5 px-3 font-bold text-slate-900">{u.name} ({u.email})</td>
+            <td className="py-2.5 px-3 text-indigo-600 font-semibold">{u.role}</td>
+            <td className="py-2.5 px-3 font-extrabold text-slate-900">{u.totalActivities}</td>
+            <td className="py-2.5 px-3">{u.calls}</td>
+            <td className="py-2.5 px-3">{u.meetings}</td>
+            <td className="py-2.5 px-3">{u.emails}</td>
+            <td className="py-2.5 px-3">{u.tasks}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 // 8. Audit Report View
 const AuditReportView = ({ data }) => {

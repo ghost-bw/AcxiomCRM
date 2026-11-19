@@ -247,7 +247,10 @@ export const ActivitiesPage = () => {
   );
 };
 
-const ActivityForm = ({ customers, leads, onSubmit, onCancel, loading }) => {
+const ActivityForm = ({ customers = [], leads = [], onSubmit, onCancel, loading }) => {
+  const safeCustomers = Array.isArray(customers) ? customers : [];
+  const safeLeads = Array.isArray(leads) ? leads : [];
+
   const {
     register,
     handleSubmit,
@@ -289,14 +292,14 @@ const ActivityForm = ({ customers, leads, onSubmit, onCancel, loading }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Select
           label="Customer Account (Optional)"
-          options={customers.map((c) => ({ value: c._id, label: `${c.name} (${c.customerCode})` }))}
+          options={safeCustomers.map((c) => ({ value: c._id, label: `${c.name} (${c.customerCode || 'CUST'})` }))}
           error={errors.customer?.message}
           {...register('customer')}
         />
 
         <Select
           label="Lead Prospect (Optional)"
-          options={leads.map((l) => ({ value: l._id, label: `${l.name} (${l.leadCode})` }))}
+          options={safeLeads.map((l) => ({ value: l._id, label: `${l.name} (${l.leadCode || 'LEAD'})` }))}
           error={errors.lead?.message}
           {...register('lead')}
         />

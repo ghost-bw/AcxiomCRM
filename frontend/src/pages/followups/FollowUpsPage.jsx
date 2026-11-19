@@ -89,27 +89,60 @@ export const FollowUpsPage = () => {
   // Fetch related collections for selection
   const { data: customersData } = useQuery({
     queryKey: ['customers-list-mini'],
-    queryFn: async () => (await axiosClient.get('/customers?limit=100')).data || [],
+    queryFn: async () => {
+      const res = await axiosClient.get('/customers?limit=100');
+      return res.data || [];
+    },
   });
 
   const { data: leadsData } = useQuery({
     queryKey: ['leads-list-mini'],
-    queryFn: async () => (await axiosClient.get('/leads?limit=100')).data || [],
+    queryFn: async () => {
+      const res = await axiosClient.get('/leads?limit=100');
+      return res.data || [];
+    },
   });
 
   const { data: oppsData } = useQuery({
     queryKey: ['opps-list-mini'],
-    queryFn: async () => (await axiosClient.get('/opportunities?limit=100')).data || [],
+    queryFn: async () => {
+      const res = await axiosClient.get('/opportunities?limit=100');
+      return res.data || [];
+    },
   });
 
   const { data: assigneesData } = useQuery({
     queryKey: ['assignees'],
-    queryFn: async () => (await axiosClient.get('/users/assignees')).data || [],
+    queryFn: async () => {
+      const res = await axiosClient.get('/users/assignees');
+      return res.data || [];
+    },
     enabled: user?.role !== 'Sales Executive',
   });
 
-  const followUps = data?.data || [];
+  const followUps = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
   const meta = data?.meta || { total: 0, totalPages: 1 };
+
+  const customersList = Array.isArray(customersData)
+    ? customersData
+    : Array.isArray(customersData?.data)
+    ? customersData.data
+    : [];
+  const leadsList = Array.isArray(leadsData)
+    ? leadsData
+    : Array.isArray(leadsData?.data)
+    ? leadsData.data
+    : [];
+  const oppsList = Array.isArray(oppsData)
+    ? oppsData
+    : Array.isArray(oppsData?.data)
+    ? oppsData.data
+    : [];
+  const assigneesList = Array.isArray(assigneesData)
+    ? assigneesData
+    : Array.isArray(assigneesData?.data)
+    ? assigneesData.data
+    : [];
 
   // Mutations
   const createMutation = useMutation({
@@ -379,17 +412,17 @@ export const FollowUpsPage = () => {
 
       {/* SCHEDULE FOLLOW-UP MODAL */}
       <Modal
-        isOpen={isCreateOpen}
+        isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
         title="Schedule Follow-Up Task"
         description="Set date and channel to contact or follow up with accounts."
         maxWidth="max-w-lg"
       >
         <FollowUpForm
-          customers={customersData || []}
-          leads={leadsData || []}
-          opportunities={oppsData || []}
-          assignees={assigneesData || []}
+          customers={customersList}
+          leads={leadsList}
+          opportunities={oppsList}
+          assignees={assigneesList}
           canAssign={user?.role !== 'Sales Executive'}
           onSubmit={(values) => createMutation.mutate(values)}
           onCancel={() => setIsScheduleOpen(false)}
@@ -487,9 +520,14 @@ export const FollowUpsPage = () => {
 };
 
 // Follow-Up Form
-const FollowUpForm = ({ customers, leads, opportunities, assignees, canAssign, onSubmit, onCancel, loading }) => {
+const FollowUpForm = ({ customers = [], leads = [], opportunities = [], assignees = [], canAssign, onSubmit, onCancel, loading }) => {
   const [relatedType, setRelatedType] = useState('Customer');
   const todayStr = new Date().toISOString().split('T')[0];
+
+  const safeCustomers = Array.isArray(customers) ? customers : [];
+  const safeLeads = Array.isArray(leads) ? leads : [];
+  const safeOpportunities = Array.isArray(opportunities) ? opportunities : [];
+  const safeAssignees = Array.isArray(assignees) ? assignees : [];
 
   const {
     register,
@@ -508,12 +546,12 @@ const FollowUpForm = ({ customers, leads, opportunities, assignees, canAssign, o
 
   const getEntityOptions = () => {
     if (relatedType === 'Customer') {
-      return customers.map((c) => ({ value: c._id, label: `${c.name} (${c.customerCode})` }));
+      return safeCustomers.map((c) => ({ value: c._id, label: `${c.name} (${c.customerCode || 'CUST'})` }));
     }
     if (relatedType === 'Lead') {
-      return leads.map((l) => ({ value: l._id, label: `${l.name} (${l.leadCode})` }));
+      return safeLeads.map((l) => ({ value: l._id, label: `${l.name} (${l.leadCode || 'LEAD'})` }));
     }
-    return opportunities.map((o) => ({ value: o._id, label: `${o.name} (${o.opportunityCode})` }));
+    return safeOpportunities.map((o) => ({ value: o._id, label: `${o.name} (${o.opportunityCode || 'OPP'})` }));
   };
 
   return (
@@ -575,7 +613,7 @@ const FollowUpForm = ({ customers, leads, opportunities, assignees, canAssign, o
       {canAssign && (
         <Select
           label="Assigned User"
-          options={assignees.map((a) => ({
+          options={safeAssignees.map((a) => ({
             value: a._id,
             label: `${a.name} (${a.role})`,
           }))}

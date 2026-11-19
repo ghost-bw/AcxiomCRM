@@ -378,7 +378,8 @@ export const CustomersPage = () => {
 };
 
 // Customer Create/Edit Form Component
-const CustomerForm = ({ defaultValues, assignees, canAssign, onSubmit, onCancel, loading }) => {
+const CustomerForm = ({ defaultValues, assignees = [], canAssign, onSubmit, onCancel, loading }) => {
+  const safeAssignees = Array.isArray(assignees) ? assignees : [];
   const {
     register,
     handleSubmit,
@@ -478,7 +479,7 @@ const CustomerForm = ({ defaultValues, assignees, canAssign, onSubmit, onCancel,
         {canAssign && (
           <Select
             label="Assigned Sales Representative"
-            options={assignees.map((a) => ({
+            options={safeAssignees.map((a) => ({
               value: a._id,
               label: `${a.name} (${a.role})`,
             }))}

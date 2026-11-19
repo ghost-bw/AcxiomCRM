@@ -476,7 +476,8 @@ export const LeadsPage = () => {
 };
 
 // Lead Create/Edit Form
-const LeadForm = ({ defaultValues, assignees, canAssign, onSubmit, onCancel, loading }) => {
+const LeadForm = ({ defaultValues, assignees = [], canAssign, onSubmit, onCancel, loading }) => {
+  const safeAssignees = Array.isArray(assignees) ? assignees : [];
   const {
     register,
     handleSubmit,
@@ -578,7 +579,7 @@ const LeadForm = ({ defaultValues, assignees, canAssign, onSubmit, onCancel, loa
         {canAssign && (
           <Select
             label="Assigned Sales Representative"
-            options={assignees.map((a) => ({
+            options={safeAssignees.map((a) => ({
               value: a._id,
               label: `${a.name} (${a.role})`,
             }))}
