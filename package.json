@@ -1,0 +1,15 @@
+{
+  "name": "acxiomcrm",
+  "version": "1.0.0",
+  "description": "AcxiomCRM – Production-Ready Full-Stack Enterprise Customer Relationship Management Application",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "test": "cd backend && npm run test",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["crm", "enterprise", "react", "express", "mongodb"],
+  "author": "AcxiomCRM Engineering",
+  "license": "ISC"
+}
